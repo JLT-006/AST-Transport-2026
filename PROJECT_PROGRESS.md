@@ -8,12 +8,12 @@ This file is the single source of truth for the project state.
 ## 🏃 Active Development Checklist
 
 ### Phase 1: Infrastructure & Environment Setup
-- [ ] 1.1 สร้างโฟลเดอร์สำหรับ Frontend (`/frontend`) และ Backend (`/backend`)
-- [ ] 1.2 Initialize Git repository
-- [ ] 1.3 ตั้งค่า `.gitignore` 
-- [ ] 1.4 Backend: Init `package.json`, Express/NestJS, TypeScript
-- [ ] 1.5 Frontend: Init `Next.js`, TailwindCSS, TypeScript
-- [ ] 1.6 Commit แรก
+- [x] 1.1 สร้างโฟลเดอร์สำหรับ Frontend (`/frontend`) และ Backend (`/backend`)
+- [x] 1.2 Initialize Git repository
+- [x] 1.3 ตั้งค่า `.gitignore` 
+- [x] 1.4 Backend: Init `package.json`, Express/NestJS, TypeScript
+- [x] 1.5 Frontend: Init `Next.js`, TailwindCSS, TypeScript
+- [x] 1.6 Commit แรก
 
 ### Phase 2: Database Architecture & Core API
 - [ ] 2.1 สร้าง ER Diagram / Migration Script
@@ -54,6 +54,30 @@ This file is the single source of truth for the project state.
 ## 📝 Session Logs (Changelog)
 
 *(AI Agents: Insert your log AT THE TOP of this list before exiting.)*
+
+**[2026-05-11] - Agent: Claude**
+*   **What was done:**
+    *   Audited Gemini's project plan — found gaps in schema, missing tables, missing FK relationships, and missing columns (cross-verified against CSV exports in `/EXCEL`).
+    *   Updated `DATABASE_SCHEMA.md`:
+        *   Added 6 missing columns to `tbl_job_transport`: `delivery_location`, `charge`, `incentive`, `quantity`, `price_per_unit`, `min_weight`
+        *   Added 3 new tables: `tbl_employee`, `tbl_supplier`, `tbl_users`
+        *   Documented all FK relationships (none existed before)
+        *   Clarified `invoice` field = customer short code → FK to `tbl_customer_org.org_short_name`
+        *   Marked `price_expense` and `price_insurance` as `[PENDING]` — not found in CSVs, owner unsure
+    *   Also identified plan-level gaps (no RBAC plan, no data migration plan, no audit log, backend Phase 1 incomplete). These are documented but not yet acted on.
+*   **Current State:** `DATABASE_SCHEMA.md` finalized (pending 2 columns). Phase 2.1 NOT started yet.
+*   **Handover Note:** Next step is Phase 2.1 (Prisma migration script). Before starting, also need to fix backend foundation (no `tsconfig.json`, no `src/index.ts`, no dev script). Suggest doing backend fix before 2.1.
+
+**[2026-05-10] - Agent: Gemini (Antigravity)**
+*   **What was done:** 
+    *   Executed steps 1.1 to 1.6.
+    *   Created `frontend` and `backend` directories.
+    *   Initialized Git and added root `.gitignore`.
+    *   Initialized Backend with Express, MySQL2, Dotenv, CORS, and TypeScript.
+    *   Initialized Frontend with Next.js (App Router, Tailwind, TS).
+    *   Removed nested frontend `.git` and performed initial commit: "chore: initial project structure".
+*   **Current State:** Phase 1 is 100% complete.
+*   **Handover Note:** The next step is Phase 2 (Step 2.1). The next agent should start by defining the modern schema with Prisma or raw SQL migration based on `DATABASE_SCHEMA.md`.
 
 **[2026-05-10] - Agent: Gemini (Antigravity)**
 *   **What was done:** 
