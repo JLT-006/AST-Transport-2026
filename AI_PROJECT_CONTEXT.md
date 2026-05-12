@@ -11,6 +11,9 @@ The system operates online (company web server) and requires daily local backups
 *   **Backend:** Node.js (or similar modern API framework)
 *   **Database:** MySQL (Hosted online on the company web server)
 *   **Data Safety:** A local script will download/pull backup dumps from the online DB every 24 hours.
+*   **GitHub Repository:** https://github.com/JLT-006/AST-Transport-2026.git
+    *   Remote name: `origin`, branch: `master`
+    *   Sync command: `git pull origin master` (ก่อนเริ่มงานทุกครั้ง), `git push origin master` (หลังเสร็จ)
 
 ## 3. [FILE_REFERENCES]
 Whenever you start a session, you MUST read the following files:
