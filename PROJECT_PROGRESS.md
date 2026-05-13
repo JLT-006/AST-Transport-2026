@@ -16,12 +16,12 @@ This file is the single source of truth for the project state.
 - [x] 1.6 Commit แรก
 
 ### Phase 2: Database Architecture & Core API
-- [ ] 2.1 สร้าง ER Diagram / Migration Script
-- [ ] 2.2 Backend: ติดตั้ง ORM (Prisma)
-- [ ] 2.3 Backend: ตั้งค่า Database Connection Pool 
-- [ ] 2.4 Backend: สร้าง Base Controller / Service Pattern
-- [ ] 2.5 Backend: สร้างระบบ Authentication (JWT)
-- [ ] 2.6 Backend: สร้าง Master Data API
+- [x] 2.1 สร้าง ER Diagram / Migration Script
+- [x] 2.2 Backend: ติดตั้ง ORM (Prisma)
+- [x] 2.3 Backend: ตั้งค่า Database Connection Pool 
+- [x] 2.4 Backend: สร้าง Base Controller / Service Pattern
+- [x] 2.5 Backend: สร้างระบบ Authentication (JWT)
+- [x] 2.6 Backend: สร้าง Master Data API
 - [ ] 2.7 Frontend: สร้าง Axios Interceptor (JWT)
 - [ ] 2.8 Commit
 
@@ -54,6 +54,52 @@ This file is the single source of truth for the project state.
 ## 📝 Session Logs (Changelog)
 
 *(AI Agents: Insert your log AT THE TOP of this list before exiting.)*
+
+**[2026-05-13] - Agent: Claude**
+*   **What was done:**
+    *   Completed Task 2.6 (Master Data API).
+    *   Added missing controllers: `TruckController`, `CustomerOrgController`.
+    *   Added `CustomerPerService`/`Controller` and `InventoryService`/`Controller` — these tables have no `flag` column, so they don't extend `BaseService` (use `hardDelete` instead of soft delete).
+    *   Created route files for all 6 master data resources: `employees`, `suppliers`, `trucks`, `customers/org`, `customers/per`, `inventory`. All protected by `authenticate` middleware.
+    *   Wired routes into `routes/index.ts`.
+    *   Fixed pre-existing TS errors: `req.params.id` type narrowing in `BaseController` (Express 5 typing), and `jwt.sign` overload in `utils/jwt.ts` (`Secret` + `SignOptions['expiresIn']`).
+    *   Ran `npx prisma generate` (client wasn't generated yet) and `tsc --noEmit` — clean.
+*   **Current State:** Phase 2.6 complete. Backend exposes full CRUD for all master data tables behind JWT auth.
+*   **Handover Note:** Next step is Phase 2.7 (Frontend Axios Interceptor for JWT). Note: `tbl_customer_per` and `tbl_inventory` lack `flag` in current schema — if soft delete is required for these, add `flag` to schema and refactor their services.
+
+**[2026-05-12] - Agent: Gemini (Antigravity)**
+*   **What was done:**
+    *   Completed Task 2.5 (Authentication): Installed `jsonwebtoken` and `bcrypt`.
+    *   Created `utils/jwt.ts` and `middlewares/authMiddleware.ts` for token generation and route protection.
+    *   Created `services/AuthService.ts` for handling login (bcrypt compare) and register logic.
+    *   Created `controllers/AuthController.ts` and wired to `/api/v1/auth/login` and `/api/v1/auth/register`.
+*   **Current State:** Backend has complete JWT Auth system.
+*   **Handover Note:** Next step is Phase 2.6 (Master Data API).
+
+**[2026-05-12] - Agent: Gemini (Antigravity)**
+*   **What was done:**
+    *   Completed Task 2.3: Created `backend/src/config/prisma.ts` for DB connection pool via Prisma Singleton.
+    *   Completed Task 2.4: Created `backend/src/services/BaseService.ts` and `backend/src/controllers/BaseController.ts` for standardized CRUD operations.
+*   **Current State:** Backend structure for DB pooling and base classes completed.
+*   **Handover Note:** Next step is Phase 2.5 (Authentication - JWT).
+
+**[2026-05-12] - Agent: Gemini (Antigravity)**
+*   **What was done:**
+    *   **Token Optimization (Caveman Mode):** Added Caveman rules to `AI_PROJECT_CONTEXT.md` and `CLAUDE.md` to enforce ~75% reduction in output tokens.
+    *   **Context Bloat Prevention:** Created `.claudeignore` and `.cursorignore` to prevent AI from indexing useless large files (lockfiles, media, DB dumps).
+    *   **Linguist Override:** Added `.gitattributes` to stop Github Copilot from indexing massive lockfiles.
+    *   **LLM Entrypoint:** Created `llms.txt` (a community standard) to enforce progressive disclosure and route AI agents efficiently.
+*   **Current State:** Project context is highly optimized for token usage and AI navigation.
+*   **Handover Note:** Next step is Phase 2.3. All agents MUST respect `llms.txt` and respond in Caveman mode.
+
+**[2026-05-12] - Agent: Gemini (Antigravity)**
+*   **What was done:**
+    *   Fixed Phase 1 Backend Foundation (Added `tsconfig.json`, `src/index.ts`, and `package.json` dev scripts).
+    *   Executed Phase 2.1 & 2.2: Installed Prisma v7 ORM and `@prisma/client`.
+    *   Created `schema.prisma` intelligently mapping legacy `DATABASE_SCHEMA.md` to Prisma models with strict foreign keys and `@@map`.
+    *   Self-Audited and caught a Prisma V7 syntax breaking change (removed `url` from `schema.prisma` into `prisma.config.ts`), and set `.env` to MySQL. `npx prisma validate` passed perfectly.
+*   **Current State:** Phase 2.1 & 2.2 Complete. Backend is fully setup and valid.
+*   **Handover Note:** Next step is Phase 2.3 (Database Connection Pool) and 2.4 (Base Controller / Service Pattern). Make sure the user has updated their real `DATABASE_URL` in `backend/.env` before proceeding.
 
 **[2026-05-11] - Agent: Claude**
 *   **What was done:**

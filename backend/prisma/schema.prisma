@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Employee {
+  emp_id       String          @id
+  emp_name     String?
+  emp_type     String?
+  flag         Int             @default(1)
+  
+  jobs         JobTransport[]
+  users        User[]
+
+  @@map("tbl_employee")
+}
+
+model Supplier {
+  supplier_id   String       @id
+  supplier_name String?
+  flag          Int          @default(1)
+  
+  expenses      Expense[]
+
+  @@map("tbl_supplier")
+}
+
+model User {
+  user_id       Int       @id @default(autoincrement())
+  username      String    @unique
+  password_hash String
+  role          String
+  emp_id        String?
+  flag          Int       @default(1)
+
+  employee      Employee? @relation(fields: [emp_id], references: [emp_id])
+
+  @@map("tbl_users")
+}
+
+model Truck {
+  truck_plate      String   @id
+  truck_tail_plate String?
+  truck_owner      String?
+  truck_type       String?
+  flag             Int      @default(1)
+
+  jobs             JobTransport[]
+  fuels            Fuel[]
+  expenses         Expense[]
+
+  @@map("tbl_truck")
+}
+
+model CustomerOrg {
+  org_short_name String  @id
+  org_name       String?
+  org_owner      String?
+  per_name       String?
+  org_status     String?
+  flag           Int     @default(1)
+
+  jobs           JobTransport[]
+
+  @@map("tbl_customer_org")
+}
+
+model CustomerPer {
+  per_id     String    @id
+  per_name   String?
+  start_date DateTime?
+  end_date   DateTime?
+
+  @@map("tbl_customer_per")
+}
+
+model Inventory {
+  inv_id       String  @id
+  inv_name     String?
+  inv_type     String?
+  inv_pcs_case Int?
+  inv_detail   String?
+  unit         String?
+
+  @@map("tbl_inventory")
+}
+
+model PurchaseOrder {
+  pr_no String @id
+  po_no String?
+  flag  Int    @default(1)
+
+  @@map("tbl_purchaseorder")
+}
+
+model JobTransport {
+  job_id              String       @id
+  invoice_no          String?
+  invoice             String?
+  station_loading     String?
+  station_destination String?
+  delivery_location   String?      // [+NEW]
+  transport_datetime  DateTime?
+  truck_plate         String?
+  emp_id              String?
+  emp_name            String?
+  total_freight       Float?
+  allowance           Float?
+  incentive           Float?       // [+NEW]
+  charge              Float?       // [+NEW]
+  weight              Float?
+  min_weight          Float?       // [+NEW]
+  quantity            Float?       // [+NEW]
+  price_type          String?
+  price_per_unit      Float?       // [+NEW]
+  price_expense       Float?       // [PENDING]
+  price_insurance     Float?       // [PENDING]
+  flag                Int          @default(1)
+
+  truck               Truck?       @relation(fields: [truck_plate], references: [truck_plate])
+  employee            Employee?    @relation(fields: [emp_id], references: [emp_id])
+  customer            CustomerOrg? @relation(fields: [invoice], references: [org_short_name])
+
+  @@map("tbl_job_transport")
+}
+
+model BlJobTransport {
+  invoice_no String  @id
+  invoice    String?
+  status     String?
+
+  @@map("tbl_bl_job_transport")
+}
+
+model Invoice {
+  invoice_no  String    @id
+  invoice     String?
+  att_invoice String?
+  create_date DateTime?
+  remark      String?
+  sum_invoice Float?
+  sum_weight  Float?
+  bl_payment  Float?
+  check_no    String?
+  flag        Int       @default(1)
+
+  @@map("tbl_invoice")
+}
+
+model Expense {
+  exp_code      String    @id
+  issued_date   DateTime?
+  payment_no    String?
+  att_no        String?
+  exp_type      String?
+  supplier_id   String?
+  company       String?
+  truck_plate   String?
+  total_expense Float?
+  exp_pcs       Int?
+  exp_prices    Float?
+
+  truck         Truck?    @relation(fields: [truck_plate], references: [truck_plate])
+  supplier      Supplier? @relation(fields: [supplier_id], references: [supplier_id])
+
+  @@map("tbl_expense")
+}
+
+model FuelImport {
+  fuel_no     String    @id
+  station     String?
+  quantity    Float?
+  date_import DateTime?
+  flag        Int       @default(1)
+
+  @@map("tbl_fuel_import")
+}
+
+model Fuel {
+  pure_id          String    @id
+  fuel_no          String?
+  truck_plate      String?
+  driver_name      String?
+  owner            String?
+  pure_datetime_in DateTime?
+  station          String?
+  distance         Float?
+  total_capacity   Float?
+  price_liter      Float?
+  flag             Int       @default(1)
+
+  truck            Truck?    @relation(fields: [truck_plate], references: [truck_plate])
+
+  @@map("tbl_fuel")
+}

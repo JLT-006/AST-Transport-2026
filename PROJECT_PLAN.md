@@ -35,8 +35,8 @@
 *   **🛡️ การจัดการความเสี่ยง (Mitigation):** ตั้งค่า Database Connection Pool Max = 50, ทุกการบันทึกข้อมูลต้องใช้ `Transaction (BEGIN...COMMIT)`, ใช้ Optimistic Locking
 
 ### Checklist:
-- [ ] 2.1 ออกแบบ ER Diagram / สร้าง Migration Script จาก `DATABASE_SCHEMA.md`
-- [ ] 2.2 Backend: ติดตั้ง ORM (เช่น Prisma) และสร้าง Model
+- [x] 2.1 ออกแบบ ER Diagram / สร้าง Migration Script จาก `DATABASE_SCHEMA.md`
+- [x] 2.2 Backend: ติดตั้ง ORM (เช่น Prisma) และสร้าง Model
 - [ ] 2.3 Backend: ตั้งค่า Database Connection Pool 
 - [ ] 2.4 Backend: สร้าง Base Controller / Service Pattern
 - [ ] 2.5 Backend: สร้างระบบ Authentication (Login/JWT)

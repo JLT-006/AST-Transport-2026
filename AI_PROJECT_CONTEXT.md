@@ -26,6 +26,7 @@ Whenever you start a session, you MUST read the following files:
 2.  **State Synchronization:** Because this project is developed across multiple machines (Office and Home) using different AI Agents (Claude and Gemini), you MUST rely ONLY on the codebase files to understand the state.
 3.  **Mandatory Logging:** **CRITICAL!** Before you finish your turn or session, you MUST update `PROJECT_PROGRESS.md`. Check off completed tasks and write a brief summary of what you implemented in the "Session Logs" section. This ensures the next AI agent knows exactly where to pick up.
 4.  **Language:** Code structure and variables should be in English, but User Interfaces (UI) and user-facing text should support Thai as it is targeting local usage.
+5.  **Token Efficiency (Caveman Mode):** All AI agents MUST respond using "caveman" style. Drop filler words, pleasantries, and articles. Keep technical substance exact. Use short, terse sentences (e.g., "Fix bug. Update DB. Done.").
 
 ---
 **Agent Initialization Checklist (Do this every time you load into the project):**

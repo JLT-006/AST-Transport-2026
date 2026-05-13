@@ -1,0 +1,19 @@
+# AST Transport Management System (VERSION 2026)
+
+> This project uses an AI-first development workflow. To save tokens, avoid indexing lockfiles or media.
+
+## Project Structure
+- `frontend/`: Next.js (App Router), TailwindCSS, TypeScript.
+- `backend/`: Express, MySQL2, Prisma (Soon), TypeScript.
+
+## Key AI Context Files
+If you need specific context, read only these files to save input tokens:
+- `PROJECT_PLAN.md`: System roadmap and architecture.
+- `PROJECT_PROGRESS.md`: Current sprint/task status. Start here.
+- `DATABASE_SCHEMA.md`: The single source of truth for the legacy MySQL database schema.
+- `AI_PROJECT_CONTEXT.md`: Global developer rules and Cross-Agent workflow.
+- `CLAUDE.md`: Quick instructions specifically for Claude/Cursor agents.
+
+## Design Decisions
+- **Caveman Mode Active**: All agents must output responses in terse "caveman" style to save output tokens (~75% reduction).
+- **Progressive Disclosure**: Do not grep or read the entire `frontend` or `backend` folder. Navigate to the specific component you are working on.
