@@ -4,4 +4,5 @@ import { Employee, Prisma } from '@prisma/client';
 
 export class EmployeeService extends BaseService<Employee, Prisma.EmployeeCreateInput, Prisma.EmployeeUpdateInput> {
   protected model = prisma.employee;
+  protected pkField = 'emp_id';
 }

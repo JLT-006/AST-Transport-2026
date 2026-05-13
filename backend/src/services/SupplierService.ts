@@ -4,4 +4,5 @@ import { Supplier, Prisma } from '@prisma/client';
 
 export class SupplierService extends BaseService<Supplier, Prisma.SupplierCreateInput, Prisma.SupplierUpdateInput> {
   protected model = prisma.supplier;
+  protected pkField = 'supplier_id';
 }

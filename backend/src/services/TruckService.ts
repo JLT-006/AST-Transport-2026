@@ -4,4 +4,5 @@ import { Truck, Prisma } from '@prisma/client';
 
 export class TruckService extends BaseService<Truck, Prisma.TruckCreateInput, Prisma.TruckUpdateInput> {
   protected model = prisma.truck;
+  protected pkField = 'truck_plate';
 }

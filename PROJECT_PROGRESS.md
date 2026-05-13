@@ -55,6 +55,35 @@ This file is the single source of truth for the project state.
 
 *(AI Agents: Insert your log AT THE TOP of this list before exiting.)*
 
+**[2026-05-13] - Agent: Claude (audit + hardening)**
+*   **What was done:**
+    *   Audited Phase 2.1–2.6 backend code, found 29 issues.
+    *   Fixed critical/runtime breakers:
+        *   **BaseService.findById was broken** — used `where: { id, flag: 1 }` but no master data table has a column named `id`. Refactored `BaseService` to require `pkField` from subclasses, added `hasFlag` flag, and added `hardDelete`. Subclasses now extend uniformly (CustomerPer/Inventory set `hasFlag = false`).
+        *   `BaseService.create` no longer forces `flag: 1` — relies on Prisma `@default(1)` so it works for tables without `flag`.
+        *   `BaseService.update` now checks soft-delete state before updating.
+    *   Security hardening:
+        *   `utils/jwt.ts` fails fast in production if `JWT_SECRET` missing/short.
+        *   Added `authorize(...roles)` middleware. Master data POST/PUT/DELETE now require `admin` role.
+        *   `/auth/register` now requires `authenticate + authorize('admin')`.
+        *   Added `loginLimiter` (10 req / 15 min) on `/auth/login`.
+        *   CORS now reads `CORS_ORIGINS` env (comma-separated) instead of allow-all.
+        *   `AuthService.login` runs dummy bcrypt compare when user not found, to neutralize timing-attack leak.
+    *   Error handling:
+        *   Added central `errorHandler` middleware that maps Prisma errors (P2002→409, P2003→409, P2025→404) so internal messages don't leak.
+        *   All controllers now `next(error)` instead of returning `error.message`.
+    *   Added pagination params (`skip`, `take`) to BaseController.findAll, with `take` capped at 200.
+    *   Added graceful shutdown (SIGTERM/SIGINT → `prisma.$disconnect()`).
+    *   Installed `express-rate-limit`.
+*   **Current State:** Backend 2.6 hardened. `tsc --noEmit` clean.
+*   **Handover Note:** Remaining issues from audit (not blocking 2.7):
+    *   No input validation library — `req.body` flows directly into Prisma. Consider Zod in Phase 2.7 alongside frontend validation.
+    *   No structured logging (pino/winston).
+    *   No ESLint/Prettier configured.
+    *   `Inventory` and `CustomerPer` use `hardDelete` (no `flag` column). If soft delete is needed, add `flag` to schema.
+    *   `Expense` has no `flag` and is not yet wired — handle when Phase 4.3 starts.
+    *   Next step: Phase 2.7 (Frontend Axios Interceptor).
+
 **[2026-05-13] - Agent: Claude**
 *   **What was done:**
     *   Completed Task 2.6 (Master Data API).

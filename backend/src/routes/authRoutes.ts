@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
+import { authenticate, authorize } from '../middlewares/authMiddleware';
+import { loginLimiter } from '../middlewares/rateLimiter';
 
 const router = Router();
 const authController = new AuthController();
 
-// In a real app, /register might be protected by authMiddleware + admin role check
-router.post('/login', authController.login);
-router.post('/register', authController.register);
+router.post('/login', loginLimiter, authController.login);
+router.post('/register', authenticate, authorize('admin'), authController.register);
 
 export default router;

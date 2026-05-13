@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: { user_id: number; role: string; emp_id?: string | null };
 }
 
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction): void => {
@@ -15,10 +15,23 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
   const token = authHeader.split(' ')[1];
   try {
     const decoded = verifyToken(token);
-    req.user = decoded;
+    req.user = decoded as AuthRequest['user'];
     next();
-  } catch (error) {
+  } catch {
     res.status(401).json({ success: false, message: 'Invalid token' });
-    return;
   }
+};
+
+export const authorize = (...roles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'Unauthorized' });
+      return;
+    }
+    if (!roles.includes(req.user.role)) {
+      res.status(403).json({ success: false, message: 'Forbidden' });
+      return;
+    }
+    next();
+  };
 };
