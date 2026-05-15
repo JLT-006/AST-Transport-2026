@@ -22,8 +22,8 @@ This file is the single source of truth for the project state.
 - [x] 2.4 Backend: สร้าง Base Controller / Service Pattern
 - [x] 2.5 Backend: สร้างระบบ Authentication (JWT)
 - [x] 2.6 Backend: สร้าง Master Data API
-- [ ] 2.7 Frontend: สร้าง Axios Interceptor (JWT)
-- [ ] 2.8 Commit
+- [x] 2.7 Frontend: สร้าง Axios Interceptor (JWT)
+- [x] 2.8 Commit
 
 ### Phase 3: PWA & Semi-Offline Sync Engine
 - [ ] 3.1 Frontend: ติดตั้ง `next-pwa`
@@ -54,6 +54,26 @@ This file is the single source of truth for the project state.
 ## 📝 Session Logs (Changelog)
 
 *(AI Agents: Insert your log AT THE TOP of this list before exiting.)*
+
+**[2026-05-15] - Agent: Claude**
+*   **What was done:**
+    *   Phase 2.7 (Frontend Axios Interceptor) + 2.8 (Commit) complete.
+    *   Installed `axios` in `frontend/`.
+    *   Created `frontend/src/lib/auth.ts` — `getToken/setToken/clearToken/getUser/setUser/isAuthenticated` backed by `localStorage` (SSR-safe via `typeof window` guards). Token key `ast_token`, user key `ast_user`.
+    *   Created `frontend/src/lib/api.ts` — singleton `axios` instance.
+        *   `baseURL` from `process.env.NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:3001/api/v1`).
+        *   Request interceptor injects `Authorization: Bearer <token>` when present.
+        *   Response interceptor: on `401`, clears token and redirects to `/login` (skips if already there).
+        *   15s timeout, JSON content-type.
+    *   Created `frontend/.env.local` + `.env.local.example` with `NEXT_PUBLIC_API_BASE_URL`.
+    *   `tsc --noEmit` clean.
+*   **Current State:** Phase 2 complete (2.1–2.8). Frontend can now talk to backend with JWT auto-attached.
+*   **Handover Note:** Next is Phase 3.1 (`next-pwa` install). Heads-up for next agent:
+    *   No `/login` page yet — 401 redirect target doesn't exist; create it early in Phase 4 or sooner if needed for testing.
+    *   No global error toast — failed requests reject silently from caller's perspective. Add UI feedback layer when first real screen is built.
+    *   Token stored in `localStorage` (XSS-vulnerable). Acceptable for internal app with ~30 users, but reconsider if scope expands. httpOnly cookie + refresh-token flow would be the upgrade path.
+    *   No CSRF concern currently (token is in `Authorization` header, not cookie).
+    *   `axios` install reported 2 moderate vulns — review with `npm audit` before production.
 
 **[2026-05-13] - Agent: Claude (audit + hardening)**
 *   **What was done:**
